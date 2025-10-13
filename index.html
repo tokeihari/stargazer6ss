@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salary Calculator</title>
+  
+  <style>
+    body {
+      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'ヒラギノ明朝 ProN', serif;
+      font-weight: bold;
+      margin: 0;
+      background: linear-gradient(135deg, #d4c4a8, #f1e9d2);
+      color: #3e2f1c;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 750px;
+      background: #fffaf0;
+      border: 2px solid #c9b79c;
+      border-radius: 12px;
+      padding: 40px 50px;
+      box-shadow: 0 4px 18px rgba(80, 60, 30, 0.3);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.6rem;
+      color: #4b3820;
+      letter-spacing: 1px;
+      margin-bottom: 30px;
+      text-shadow: 1px 1px 2px rgba(100, 80, 40, 0.3);
+      border-bottom: 2px solid #c9b79c;
+      padding-bottom: 10px;
+      font-family: 'Papyrus', serif;
+    }
+
+    /* 明朝体の部分を全て太字に */
+    * {
+      font-weight: bold;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #5e482a;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid #bba27f;
+      border-radius: 6px;
+      background-color: #fff8e7;
+      color: #3e2f1c;
+      font-size: 16px;
+      transition: 0.2s;
+      font-family: inherit;
+    }
+
+    input::placeholder {
+      font-family: inherit;
+      color: #8b7d6b;
+      opacity: 0.8;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #a58a64;
+      box-shadow: 0 0 6px rgba(165, 138, 100, 0.6);
+    }
+
+    .time-inputs {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .time-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .time-group label {
+      font-size: 12px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    .time-group select {
+      width: 70px;
+      text-align: center;
+    }
+
+    button {
+      background: linear-gradient(90deg, #c2a676, #b59463);
+      color: white;
+      padding: 12px 22px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      margin: 6px;
+      font-family: inherit;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #d3b77f, #a6844f);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(100, 80, 40, 0.3);
+    }
+
+    .work-day {
+      border: 1px solid #d9c9a6;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      background-color: #fff9e6;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #f5ecd3;
+      border: 1px solid #c9b79c;
+      border-radius: 8px;
+    }
+
+    .result h3, .result h2 {
+      color: #6b512d;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .total {
+      font-size: 20px;
+      font-weight: bold;
+      color: #8b6d3b;
+      border-top: 1px solid #c9b79c;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+
+    .screenshot-area {
+      background: #f5ecd3;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #c9b79c;
+      margin: 20px 0;
+    }
+
+    @media print {
+      body * { 
+        visibility: hidden; 
+      }
+      .screenshot-area, .screenshot-area * { 
+        visibility: visible; 
+      }
+      .screenshot-area {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        background: white;
+        color: black;
+        box-shadow: none;
+        border: none;
+        margin: 0;
+        padding: 20px;
+      }
+      /* スクリーンショット・印刷ボタンを印刷時は非表示 */
+      .screenshot-button, .print-button {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Salary Calculator</h1>
+
+    <div class="form-group">
+      <label for="hourlyWage">時給:</label>
+      <input type="number" id="hourlyWage" placeholder="例: 1200">
+    </div>
+
+    <div class="form-group">
+      <label for="totalWorkDays">総勤務回数:</label>
+      <input type="number" id="totalWorkDays" placeholder="例: 5">
+    </div>
+
+    <div class="form-group">
+      <label for="overnightStays">宿泊回数:</label>
+      <input type="number" id="overnightStays" placeholder="例: 2" value="0">
+    </div>
+
+    <button onclick="generateWorkDayInputs()">勤務日入力フォームを生成</button>
+    <button onclick="fillSampleData()">サンプルデータで試す</button>
+
+    <div id="workDaysContainer"></div>
+    <button onclick="calculateSalary()" style="display: none;" id="calculateBtn">給与を計算</button>
+    <div id="result"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
