@@ -163,6 +163,31 @@
       margin: 20px 0;
     }
 
+    .notice {
+      background: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+      color: #856404;
+    }
+
+    .notice h4 {
+      color: #856404;
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+
+    .notice ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .notice li {
+      margin-bottom: 5px;
+      line-height: 1.4;
+    }
+
     @media print {
       body * { 
         visibility: hidden; 
@@ -214,6 +239,17 @@
 
     <div id="workDaysContainer"></div>
     <button onclick="calculateSalary()" style="display: none;" id="calculateBtn">給与を計算</button>
+    
+    <div class="notice">
+      <h4>⚠️ 注意事項</h4>
+      <ul>
+        <li>計算結果は概算であり、必ずしも正確な値を保証するものではありません。</li>
+        <li>小数点以下の丸め処理により、実際の値と誤差が生じる場合があります。</li>
+        <li>すべての補助金や手当を網羅していない可能性があります。</li>
+        <li>休憩時間は所定の規則に基づいて計算しています。</li>
+      </ul>
+    </div>
+    
     <div id="result"></div>
   </div>
 
