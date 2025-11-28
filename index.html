@@ -35,19 +35,32 @@
 
     .hero-title {
       font-size: 3rem;
-      font-weight: 800;
+      font-weight: 300;
       text-align: center;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.15em;
       margin-bottom: 15px;
+      font-family: 'Times New Roman', 'Playfair Display', 'Georgia', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS PMincho', serif;
 
-      background: linear-gradient(90deg, #1e3c72, #2a5298, #3498db, #5dade2, #85c1e9, #aed6f1);
+      background: linear-gradient(90deg, #2c3e50, #34495e, #5d6d7e, #85929e, #aab7b8);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
 
       display: inline-block;
-      padding-bottom: 8px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      padding-bottom: 12px;
+      position: relative;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #85929e, transparent);
     }
 
     @keyframes pulse {
@@ -427,7 +440,7 @@
     }
 
     .notice-content.open {
-      max-height: 300px;
+      max-height: 500px;
       padding: 12px;
     }
 
@@ -608,6 +621,182 @@
       background: linear-gradient(135deg, #e17055, #d63031);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(255, 118, 117, 0.3);
+    }
+
+    /* モバイル対応のレスポンシブデザイン */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .container {
+        width: 100%;
+        padding: 20px 15px;
+        margin: 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        line-height: 1.2;
+        letter-spacing: 0.12em;
+        font-weight: 300;
+      }
+
+      .form-row {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .steps-content {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .step {
+        white-space: normal;
+        line-height: 1.4;
+      }
+
+      .steps-content-wrapper.open {
+        max-height: 200px;
+      }
+
+      .button-notice-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .button-notice-container #calculateBtn,
+      .button-notice-container #calendarScreenshotBtn {
+        width: 100%;
+        align-self: stretch;
+      }
+
+      .calendar {
+        max-width: 100%;
+        padding: 15px;
+        gap: 2px;
+      }
+
+      .calendar-day {
+        font-size: 14px;
+        min-height: 40px;
+        border-radius: 6px;
+      }
+
+      .time-inputs {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .time-group {
+        width: 100%;
+      }
+
+      .time-group select {
+        width: 100%;
+        text-align: left;
+      }
+
+      .date-input-row {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .time-input-group {
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+
+      .result p {
+        flex-direction: column;
+        text-align: left;
+        gap: 5px;
+      }
+
+      .result p small {
+        text-align: right;
+        font-size: 12px;
+      }
+
+      .total {
+        font-size: 20px;
+        text-align: center;
+      }
+
+      button, .screenshot-button, .print-button, .calendar-screenshot-button {
+        width: 100%;
+        margin: 8px 0;
+        padding: 14px 20px;
+        font-size: 15px;
+      }
+
+      .notice-content.open {
+        max-height: 600px;
+      }
+
+      .notice-content li {
+        font-size: 14px;
+        line-height: 1.6;
+        padding: 8px 0;
+      }
+    }
+
+    /* より小さなスマートフォン向け */
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px 10px;
+      }
+
+      .hero-title {
+        font-size: 1.6rem;
+        letter-spacing: 0.1em;
+        font-weight: 300;
+      }
+
+      .calendar {
+        padding: 10px;
+      }
+
+      .calendar-day {
+        font-size: 12px;
+        min-height: 35px;
+      }
+
+      .form-group label {
+        font-size: 13px;
+      }
+
+      input, select {
+        font-size: 14px;
+        padding: 10px 12px;
+      }
+
+      .total {
+        font-size: 18px;
+        padding: 15px;
+      }
+
+      .result p {
+        padding: 10px 15px;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      .notice-content li {
+        font-size: 13px;
+      }
     }
 
     @media print {
