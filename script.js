@@ -393,13 +393,14 @@ function updateCalculateButton() {
 class PayBreakdown {
   constructor(baseWage = 0, nightAllowance = 0, earlyAllowance = 0, overtimeAllowance = 0, 
               mealAllowance = 0, transportation = 700,
-              baseMinutes = 0, nightMinutes = 0, earlyMinutes = 0, overtimeMinutes = 0) {
+              baseMinutes = 0, nightMinutes = 0, earlyMinutes = 0, overtimeMinutes = 0, yearEndAllowance = 0) {
     this.baseWage = baseWage;
     this.nightAllowance = nightAllowance;
     this.earlyAllowance = earlyAllowance;
     this.overtimeAllowance = overtimeAllowance;
     this.mealAllowance = mealAllowance;
     this.transportation = transportation;
+    this.yearEndAllowance = yearEndAllowance;
     // 時間（分）の内訳を追加
     this.baseMinutes = baseMinutes;
     this.nightMinutes = nightMinutes;
@@ -441,7 +442,7 @@ function calculateWorkingMinutes(startMinutes, endMinutes) {
   return totalMinutes - breakMinutes;
 }
 
-// 食事手当を計算
+// 食事手当を計算（削除予定 - calculateDetailedPayに統合）
 function calculateMealAllowance(workingMinutes, month, day) {
   const workingHours = workingMinutes / 60.0;
   
@@ -449,10 +450,8 @@ function calculateMealAllowance(workingMinutes, month, day) {
   const isYearEnd = (month === 12 && day === 31) || (month === 1 && day <= 3);
   
   if (isYearEnd) {
-    if (workingHours >= 4) {
-      const extraHours = Math.max(0, Math.floor(workingHours - 4));
-      return 1600 + extraHours * 400;
-    }
+    // 年末年始手当は別途計算するため、食事手当は0
+    return 0;
   } else {
     if (workingHours >= 8) {
       return 300;
@@ -506,43 +505,37 @@ function calculateDetailedPay(hourlyWage, startMinutes, endMinutes, workingMinut
   const regularMinutes = Math.min(workingMinutes, 8 * 60);  // 8時間まで
   const overtimeMinutes = Math.max(0, workingMinutes - 8 * 60);  // 8時間超過分
   
-  // 各手当を計算（目安として）
-  const baseWage = Math.ceil((regularMinutes / 60) * hourlyWage);
-  
-  // 深夜勤務手当の詳細計算（個別計算用 - 表示のみ）
-  const nightHours = nightMinutes / 60;
-  const nightRate = hourlyWage * 0.46;
-  const nightCalculation = Math.round((nightHours * nightRate) * 100) / 100; // 精度向上
-  const nightAllowance = nightCalculation; // 切り上げは総計算で実施
-  
-  const earlyAllowance = Math.ceil((earlyMinutes / 60) * (hourlyWage * 0.25));
-  const overtimeAllowance = Math.ceil((overtimeMinutes / 60) * (hourlyWage * 1.25));
-  
   const transportation = 700; // 1日あたり700円
-  let mealAllowance = 0;
   
-  // 食事手当: 実働4時間以上で150円、8時間以上で300円
-  if (workingMinutes >= 8 * 60) {
-    mealAllowance = 300;  // 8時間以上
-  } else if (workingMinutes >= 4 * 60) {
-    mealAllowance = 150;  // 4時間以上8時間未満
+  // 食事手当: 実働4時間以上で150円、8時間以上で300円（年末年始除く）
+  let mealAllowance = 0;
+  const isYearEnd = (month === 12 && day === 31) || (month === 1 && day <= 3);
+  
+  if (!isYearEnd) {
+    if (workingMinutes >= 8 * 60) {
+      mealAllowance = 300;  // 8時間以上
+    } else if (workingMinutes >= 4 * 60) {
+      mealAllowance = 150;  // 4時間以上8時間未満
+    }
   }
   
+  // 年末年始手当: 12/31-1/3において実働4時間以上1,600円、以後1時間につき400円加算
+  let yearEndAllowance = 0;
+  if (isYearEnd && workingMinutes >= 4 * 60) {
+    const workingHours = workingMinutes / 60;
+    const extraHours = Math.max(0, Math.floor(workingHours - 4));
+    yearEndAllowance = 1600 + extraHours * 400;
+  }
+  
+  // 個別計算ではなく、時間のみ返す（金額計算は後でまとめて行う）
   return new PayBreakdown(
-    baseWage, nightAllowance, earlyAllowance, 
-    overtimeAllowance, mealAllowance, transportation,
-    regularMinutes, nightMinutes, earlyMinutes, overtimeMinutes  // 時間（分）も返す
+    0, 0, 0, 0,  // 金額は0で返す
+    mealAllowance, transportation,
+    regularMinutes, nightMinutes, earlyMinutes, overtimeMinutes, yearEndAllowance
   );
 }
 
-// 求職受付手数料を計算
-function calculateJobFee(workDaysInMonth) {
-  if (workDaysInMonth >= 3) {
-    return 2130;  // 3日以上は一律
-  } else {
-    return workDaysInMonth * 710;  // 3日未満は日数×710円
-  }
-}
+// 求職受付手数料を計算（削除済み）
 
 // 月の日数を取得
 function getDaysInMonth(month) {
@@ -756,6 +749,7 @@ function calculateSalary() {
   let totalOvertimeMinutes = 0;  // 時間外時間の合計（8時間超過分）
   let totalMealAllowance = 0;    // 食事手当（回数ベース）
   let totalTransportation = 0;  // 通勤費（回数ベース）
+  let totalYearEndAllowance = 0; // 年末年始手当の合計
   
   const today = new Date();
   const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -785,22 +779,30 @@ function calculateSalary() {
     totalOvertimeMinutes += breakdown.overtimeMinutes || 0;
     totalMealAllowance += breakdown.mealAllowance;
     totalTransportation += breakdown.transportation;
+    totalYearEndAllowance += breakdown.yearEndAllowance || 0;
   }
   
   // 総計表示
   resultHTML += '<h3>総計</h3>';
   
-  // 合計時間から手当を計算
-  const finalBaseWage = Math.ceil((totalRegularMinutes / 60) * hourlyWage);
+  // 時間外労働の時間端数処理（30分未満切り捨て、30分以上1時間切り上げ）
+  const overtimeHours = totalOvertimeMinutes / 60;
+  const overtimeMinuteRemainder = totalOvertimeMinutes % 60;
+  let adjustedOvertimeHours;
   
-  // 深夜勤務手当の詳細計算
-  const totalNightHours = totalNightMinutes / 60;
-  const nightRate = hourlyWage * 0.46;
-  const finalNightCalculation = Math.round((totalNightHours * nightRate) * 100) / 100; // 精度向上
-  const finalNightAllowance = Math.ceil(finalNightCalculation);
+  if (overtimeMinuteRemainder < 30) {
+    // 30分未満は切り捨て
+    adjustedOvertimeHours = Math.floor(overtimeHours);
+  } else {
+    // 30分以上は1時間に切り上げ
+    adjustedOvertimeHours = Math.ceil(overtimeHours);
+  }
   
-  const finalEarlyAllowance = Math.ceil((totalEarlyMinutes / 60) * (hourlyWage * 0.25));
-  const finalOvertimeAllowance = Math.ceil((totalOvertimeMinutes / 60) * (hourlyWage * 1.25));
+  // 全ての時間を合算してから最後に時給を掛けて四捨五入（50銭未満切り捨て、50銭以上切り上げ）
+  const finalBaseWage = Math.round((totalRegularMinutes / 60) * hourlyWage);
+  const finalNightAllowance = Math.round((totalNightMinutes / 60) * (hourlyWage * 0.46));
+  const finalEarlyAllowance = Math.round((totalEarlyMinutes / 60) * (hourlyWage * 0.25));
+  const finalOvertimeAllowance = Math.round(adjustedOvertimeHours * (hourlyWage * 1.25));
   
   resultHTML += `<p>日勤手当: ${finalBaseWage}円 <small>(${(totalRegularMinutes / 60).toFixed(2)}時間)</small></p>`;
   
@@ -811,7 +813,7 @@ function calculateSalary() {
     resultHTML += `<p>深夜勤務手当: ${finalNightAllowance}円 <small>(${(totalNightMinutes / 60).toFixed(2)}時間)</small></p>`;
   }
   if (totalOvertimeMinutes > 0) {
-    resultHTML += `<p>時間外労働手当: ${finalOvertimeAllowance}円 <small>(${(totalOvertimeMinutes / 60).toFixed(2)}時間)</small></p>`;
+    resultHTML += `<p>時間外労働手当: ${finalOvertimeAllowance}円 <small>(${adjustedOvertimeHours.toFixed(2)}時間)</small></p>`;
   }
   
   resultHTML += `<p>通勤費: ${totalTransportation}円</p>`;
@@ -819,11 +821,17 @@ function calculateSalary() {
   if (totalMealAllowance > 0) {
     resultHTML += `<p>食事手当: ${totalMealAllowance}円</p>`;
   }
+  if (totalYearEndAllowance > 0) {
+    resultHTML += `<p>年末年始手当: ${totalYearEndAllowance}円</p>`;
+  }
   if (overnightStays > 0) {
     resultHTML += `<p>宿泊手当: ${accommodationAllowance}円</p>`;
   }
+  if (overnightStays > 0) {
+    resultHTML += `<p>夜食利用: ${nightMealAllowance}円</p>`;
+  }
   
-  const grossSalary = finalBaseWage + finalNightAllowance + finalEarlyAllowance + finalOvertimeAllowance + totalMealAllowance + totalTransportation + accommodationAllowance;
+  const grossSalary = finalBaseWage + finalNightAllowance + finalEarlyAllowance + finalOvertimeAllowance + totalMealAllowance + totalYearEndAllowance + totalTransportation + accommodationAllowance + nightMealAllowance;
   
   resultHTML += `<div class="total">
     総支給額: ${grossSalary}円
