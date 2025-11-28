@@ -7,82 +7,175 @@
   
   <style>
     body {
-      font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'ヒラギノ明朝 ProN', serif;
-      font-weight: bold;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      font-weight: 400;
       margin: 0;
-      background: linear-gradient(135deg, #d4c4a8, #f1e9d2);
-      color: #3e2f1c;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 50%, #f0f4f8 100%);
+      color: #4a4a4a;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .container {
-      width: 90%;
-      max-width: 750px;
-      background: #fffaf0;
-      border: 2px solid #c9b79c;
-      border-radius: 12px;
-      padding: 40px 50px;
-      box-shadow: 0 4px 18px rgba(80, 60, 30, 0.3);
+      width: 95%;
+      max-width: 800px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 16px;
+      padding: 30px 35px;
+      box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.08),
+        0 4px 16px rgba(0, 0, 0, 0.04);
     }
 
-    h1 {
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
       text-align: center;
-      font-size: 2.6rem;
-      color: #4b3820;
-      letter-spacing: 1px;
-      margin-bottom: 30px;
-      text-shadow: 1px 1px 2px rgba(100, 80, 40, 0.3);
-      border-bottom: 2px solid #c9b79c;
-      padding-bottom: 10px;
-      font-family: 'Papyrus', serif;
+      letter-spacing: 0.08em;
+      margin-bottom: 15px;
+
+      background: linear-gradient(90deg, #1e3c72, #2a5298, #3498db, #5dade2, #85c1e9, #aed6f1);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+
+      display: inline-block;
+      padding-bottom: 8px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     }
 
-    /* 明朝体の部分を全て太字に */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* フォントの統一 */
     * {
-      font-weight: bold;
+      font-weight: 400;
+    }
+
+    /* 手順ガイドアコーディオン */
+    .steps-guide {
+      border-bottom: 1px solid rgba(99, 125, 150, 0.2);
+      margin-bottom: 25px;
+    }
+
+    .steps-header {
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: color 0.3s ease;
+    }
+
+    .steps-header:hover {
+      color: #2d3748;
+    }
+
+    .steps-arrow {
+      transition: transform 0.3s ease;
+      font-size: 0.8em;
+      color: #718096;
+    }
+
+    .steps-arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .steps-content-wrapper {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+
+    .steps-content-wrapper.open {
+      max-height: 100px;
+      padding-bottom: 12px;
+    }
+
+    .steps-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+      font-size: 13px;
+      padding-top: 8px;
+    }
+
+    .step {
+      color: #2d3748;
+      font-weight: 500;
+      white-space: nowrap;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-end;
+      margin-bottom: 25px;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      margin-bottom: 0;
     }
 
     label {
       display: block;
-      margin-bottom: 6px;
-      font-weight: bold;
-      color: #5e482a;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
     }
 
     input, select {
       width: 100%;
-      padding: 10px 14px;
-      border: 1px solid #bba27f;
-      border-radius: 6px;
-      background-color: #fff8e7;
-      color: #3e2f1c;
-      font-size: 16px;
-      transition: 0.2s;
-      font-family: inherit;
+      padding: 12px 16px;
+      border: 2px solid rgba(135, 206, 235, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #2c3e50;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      box-sizing: border-box;
+      border-left: 4px solid #87CEEB;
     }
 
     input::placeholder {
-      font-family: inherit;
-      color: #8b7d6b;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      color: #95a5a6;
       opacity: 0.8;
     }
 
     input:focus, select:focus {
       outline: none;
-      border-color: #a58a64;
-      box-shadow: 0 0 6px rgba(165, 138, 100, 0.6);
+      border-color: #87CEEB;
+      box-shadow: 0 4px 12px rgba(135, 206, 235, 0.2);
+      background: rgba(255, 255, 255, 1);
+      transform: translateY(-1px);
+      border-left-color: #4682B4;
     }
 
     .time-inputs {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       align-items: flex-end;
     }
 
@@ -96,96 +189,425 @@
       font-size: 12px;
       margin-bottom: 5px;
       text-align: center;
+      color: #6b5b73;
+      font-weight: 500;
     }
 
     .time-group select {
-      width: 70px;
+      width: 80px;
       text-align: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 2px solid rgba(167, 155, 178, 0.2);
     }
 
-    button {
-      background: linear-gradient(90deg, #c2a676, #b59463);
+    /* 時刻入力モーダル用CSS */
+    .time-display {
+      font-size: 10px; 
+      background: rgba(255, 255, 255, 0.9); 
+      padding: 2px 4px; 
+      border-radius: 4px; 
+      margin-top: 2px; 
+      line-height: 1.2;
+      text-align: center;
+      color: #6b5b73;
+      font-weight: 500;
+    }
+
+    .calendar-day.selected .time-display {
+      background: rgba(255, 255, 255, 0.95);
+      color: #4a4a4a;
+    }
+
+    /* カレンダーの期間表示 */
+    .payroll-period {
+      text-align: center;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255, 248, 220, 0.6);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #6c5700;
+      border: 1px solid rgba(255, 193, 7, 0.3);
+    }
+
+    button, .screenshot-button, .print-button, .calendar-screenshot-button {
+      background: linear-gradient(135deg, #B0E0E6, #87CEEB);
       color: white;
-      padding: 12px 22px;
+      padding: 12px 24px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 15px;
-      font-weight: bold;
+      font-size: 14px;
+      font-weight: 600;
       letter-spacing: 0.5px;
-      margin: 6px;
-      font-family: inherit;
-      transition: 0.25s;
+      margin: 10px 5px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Yu Gothic UI', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(176, 224, 230, 0.3);
+      border-left: 4px solid #87CEEB;
     }
 
-    button:hover {
-      background: linear-gradient(90deg, #d3b77f, #a6844f);
+    button:hover, .screenshot-button:hover, .print-button:hover, .calendar-screenshot-button:hover {
+      background: linear-gradient(135deg, #87CEEB, #6495ED);
       transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(100, 80, 40, 0.3);
+      box-shadow: 0 6px 20px rgba(176, 224, 230, 0.4);
+      border-left-color: #6495ED;
+    }
+
+    button:active {
+      transform: translateY(-1px);
     }
 
     .work-day {
-      border: 1px solid #d9c9a6;
-      padding: 15px;
-      margin: 10px 0;
-      border-radius: 8px;
-      background-color: #fff9e6;
+      border: 2px solid rgba(200, 190, 180, 0.2);
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 16px;
+      background: rgba(248, 244, 240, 0.4);
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+    }
+
+    .work-day:hover {
+      border-color: rgba(167, 155, 178, 0.3);
+      background: rgba(248, 244, 240, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     }
 
     .result {
       margin-top: 25px;
-      padding: 20px;
-      background: #f5ecd3;
-      border: 1px solid #c9b79c;
-      border-radius: 8px;
+      padding: 0;
+      background: transparent;
+      backdrop-filter: none;
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
+      color: #2c3e50;
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
     }
 
-    .result h3, .result h2 {
-      color: #6b512d;
-      margin-bottom: 10px;
-      font-weight: bold;
+    .result h3 {
+      color: #2a5298;
+      margin-bottom: 25px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 2px;
+      font-size: 1.4rem;
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 8px;
+      display: inline-block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .result p {
+      margin: 0;
+      padding: 12px 20px;
+      font-weight: 500;
+      color: #34495e;
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
+      background: rgba(255, 255, 255, 0.9);
+      border-left: 4px solid #87CEEB;
+      margin-bottom: 8px;
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 2px 8px rgba(135, 206, 235, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .result p:nth-child(even) {
+      background: rgba(248, 252, 255, 0.95);
+      border-left-color: #4682B4;
     }
 
     .total {
-      font-size: 20px;
-      font-weight: bold;
-      color: #8b6d3b;
-      border-top: 1px solid #c9b79c;
-      padding-top: 10px;
-      margin-top: 10px;
+      margin: 25px 0 0 0;
+      padding: 18px 20px;
+      font-weight: 800;
+      font-size: 24px;
+      color: #2c3e50;
+      background: rgba(248, 252, 255, 0.95);
+      border-left: 6px solid #4682B4;
+      border-radius: 0 12px 12px 0;
+      box-shadow: 0 4px 12px rgba(135, 206, 235, 0.15);
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .total small {
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
+      color: #7f8c8d;
     }
 
     .screenshot-area {
-      background: #f5ecd3;
-      padding: 20px;
-      border-radius: 8px;
-      border: 1px solid #c9b79c;
-      margin: 20px 0;
+      background: transparent;
+      backdrop-filter: none;
+      padding: 0;
+      border-radius: 0;
+      border: none;
+      margin: 25px 0;
+      box-shadow: none;
+      color: #2c3e50;
+      font-family: 'Times New Roman', '游明朝体', 'Yu Mincho', 'YuMincho', '游明朝', 'Hiragino Mincho ProN', 'MS P明朝', serif;
+    }
+
+    /* ボタンと注意セクションのレイアウト */
+    .button-notice-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      margin: 25px 0;
+      flex-wrap: wrap;
+    }
+
+    .button-notice-container #calculateBtn,
+    .button-notice-container #calendarScreenshotBtn {
+      margin: 0;
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+
+    .button-notice-container .notice {
+      margin: 0;
+      flex: 1;
+      min-width: 250px;
     }
 
     .notice {
-      background: #fff3cd;
-      border: 1px solid #ffeaa7;
-      border-radius: 6px;
-      padding: 15px;
-      margin: 20px 0;
-      color: #856404;
+      margin: 25px 0;
+      background: rgba(255, 252, 240, 0.4);
+      border: 1px solid #d4a574;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    .notice h4 {
-      color: #856404;
-      margin: 0 0 10px 0;
-      font-size: 16px;
-    }
-
-    .notice ul {
+    .notice-header {
+      background: linear-gradient(135deg, #f0e68c 0%, #f5f5dc 100%);
+      color: #333;
       margin: 0;
-      padding-left: 20px;
+      padding: 12px;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s ease;
+      border-radius: 9px 9px 0 0;
+      font-size: 16px;
+      font-weight: 600;
     }
 
-    .notice li {
-      margin-bottom: 5px;
-      line-height: 1.4;
+    .notice-header:hover {
+      background: linear-gradient(135deg, #e6d875 0%, #f0e68c 100%);
+    }
+
+    .notice-arrow {
+      transition: transform 0.3s ease;
+      font-size: 0.8em;
+      color: #666;
+    }
+
+    .notice-arrow.rotated {
+      transform: rotate(180deg);
+    }
+
+    .notice-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0 12px;
+      background: rgba(255, 252, 240, 0.2);
+    }
+
+    .notice-content.open {
+      max-height: 300px;
+      padding: 12px;
+    }
+
+    .notice-content ul {
+      margin: 0;
+      list-style: none;
+      padding: 0;
+    }
+
+    .notice-content li {
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(212, 165, 116, 0.3);
+      padding-left: 15px;
+      position: relative;
+      line-height: 1.5;
+      color: #6c5700;
+    }
+
+    .notice-content li:last-child {
+      border-bottom: none;
+    }
+
+    .notice-content li::before {
+      content: "•";
+      color: #d4a574;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    /* カレンダー用CSS */
+    .calendar-container {
+      margin: 25px 0;
+      display: none;
+    }
+
+    .calendar-header {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 20px;
+      font-weight: 500;
+      color: #4a5568;
+      letter-spacing: 1px;
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 3px;
+      max-width: 550px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(247, 250, 252, 0.8);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .calendar-day {
+      aspect-ratio: 1;
+      border: 2px solid rgba(226, 232, 240, 0.3);
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      border-radius: 8px;
+      font-weight: 500;
+      color: #4a5568;
+    }
+
+    .calendar-day:hover {
+      background: rgba(226, 232, 240, 0.4);
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(99, 125, 150, 0.15);
+      border-color: rgba(99, 125, 150, 0.3);
+    }
+
+    .calendar-day.selected {
+      font-weight: 700 !important;
+      border: 2px solid #4299e1 !important;
+      box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.3) !important;
+      position: relative;
+    }
+
+    .calendar-day.selected::after {
+      content: '✓';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 10px;
+      color: #4299e1;
+      font-weight: bold;
+    }
+
+    .calendar-day.other-month {
+      color: #a0aec0;
+      background: rgba(247, 250, 252, 0.5);
+      border-color: rgba(226, 232, 240, 0.2);
+    }
+
+    .calendar-day.weekend {
+      color: #e53e3e;
+      background: rgba(254, 242, 242, 0.8);
+      border-color: rgba(254, 215, 215, 0.3);
+    }
+
+    .calendar-day.saturday {
+      color: #3182ce;
+      background: rgba(237, 242, 247, 0.8);
+      border-color: rgba(190, 227, 248, 0.3);
+    }
+
+    .day-header {
+      background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+      color: #4a5568;
+      font-weight: 600;
+      font-size: 13px;
+      border-radius: 6px;
+      border: none;
+    }
+
+    .selected-dates {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(255, 248, 220, 0.8);
+      backdrop-filter: blur(5px);
+      border: 2px solid rgba(255, 193, 7, 0.3);
+      border-radius: 12px;
+      display: none;
+    }
+
+    .date-input-row {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 12px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.6);
+      border-radius: 10px;
+      border: 1px solid rgba(200, 190, 180, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .date-input-row:hover {
+      background: rgba(255, 255, 255, 0.8);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-label {
+      min-width: 90px;
+      font-weight: 600;
+      color: #6b5b73;
+    }
+
+    .time-input-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .remove-date {
+      background: linear-gradient(135deg, #ff7675, #e17055);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .remove-date:hover {
+      background: linear-gradient(135deg, #e17055, #d63031);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 118, 117, 0.3);
     }
 
     @media print {
@@ -208,7 +630,7 @@
         padding: 20px;
       }
       /* スクリーンショット・印刷ボタンを印刷時は非表示 */
-      .screenshot-button, .print-button {
+      .screenshot-button, .print-button, .calendar-screenshot-button, .calendar-actions {
         display: none !important;
       }
     }
@@ -217,16 +639,44 @@
 
 <body>
   <div class="container">
-    <h1>Salary Calculator</h1>
+    <div style="text-align: center; margin-bottom: 25px;">
+      <h1 class="hero-title">Salary Calculator</h1>
+    </div>
+
+    <div class="steps-guide">
+      <div class="steps-header" onclick="toggleSteps()">
+        手順
+        <span class="steps-arrow">▼</span>
+      </div>
+      <div class="steps-content-wrapper" id="stepsContent">
+        <div class="steps-content">
+          <span class="step">①時給・年月・宿泊回数を入力</span>
+          <span class="step">②カレンダーを表示</span>
+          <span class="step">③勤務日をクリックして時間を設定・保存</span>
+          <span class="step">④給与を計算</span>
+        </div>
+      </div>
+    </div>
 
     <div class="form-group">
       <label for="hourlyWage">時給:</label>
       <input type="number" id="hourlyWage" placeholder="例: 1200">
     </div>
 
-    <div class="form-group">
-      <label for="totalWorkDays">総勤務回数:</label>
-      <input type="number" id="totalWorkDays" placeholder="例: 5">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="targetYear">対象年:</label>
+        <select id="targetYear">
+          <option value="">年を選択</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="targetMonth">対象月:</label>
+        <select id="targetMonth">
+          <option value="">月を選択</option>
+        </select>
+      </div>
     </div>
 
     <div class="form-group">
@@ -234,23 +684,42 @@
       <input type="number" id="overnightStays" placeholder="例: 2" value="0">
     </div>
 
-    <button onclick="generateWorkDayInputs()">勤務日入力フォームを生成</button>
+    <button onclick="generateCalendar()">カレンダーを表示</button>
     <button onclick="fillSampleData()">サンプルデータで試す</button>
 
+    <!-- カレンダーコンテナ -->
+    <div class="calendar-container" id="calendarContainer">
+      <div class="calendar-header" id="calendarHeader"></div>
+      <div class="calendar" id="calendar"></div>
+      <div class="selected-dates" id="selectedDates">
+        <h4>選択された勤務日</h4>
+        <div id="dateInputs"></div>
+      </div>
+    </div>
+
     <div id="workDaysContainer"></div>
-    <button onclick="calculateSalary()" style="display: none;" id="calculateBtn">給与を計算</button>
     
-    <div class="notice">
-      <h4>⚠️ 注意事項 ⚠️</h4>
-      <ul>
-        <li>計算結果は概算であり、必ずしも正確な値を保証するものではありません。</li>
-        <li>小数点以下の丸め処理により、実際の値と誤差が生じる場合があります。</li>
-        <li>すべての補助金や手当を網羅していない可能性があります。</li>
-        <li>休憩時間は所定の規則に基づいて計算しています。</li>
-        <li>計算結果はあくまで支給総額であり、一般に実際の振込金額とは異なります。</li>
-        <li>求職手数料や所得税などの控除額は含まれていません。</li>
-        <li>各自で控除金額を計算することで、実際の振込金額を求めることができます。</li>
-      </ul>
+    <div class="button-notice-container">
+      <button onclick="calculateSalary()" style="display: none;" id="calculateBtn">給与を計算</button>
+      <button class="calendar-screenshot-button" onclick="screenshotCalendar()" style="display: none;" id="calendarScreenshotBtn">📅 カレンダーをスクリーンショット</button>
+      
+      <div class="notice">
+        <h4 class="notice-header" onclick="toggleNotice()">
+          ⚠️ 注意 ⚠️ 
+          <span class="notice-arrow">▼</span>
+        </h4>
+        <div class="notice-content" id="noticeContent">
+          <ul>
+            <li>計算結果は概算であり、必ずしも正確な値を保証するものではありません。</li>
+            <li>小数点以下の丸め処理により、実際の値と誤差が生じる場合があります。</li>
+            <li>すべての補助金や手当を網羅していない可能性があります。</li>
+            <li>休憩時間は所定の規則に基づいて計算しています。</li>
+            <li>計算結果はあくまで支給総額であり、一般に実際の振込金額とは異なります。</li>
+            <li>求職手数料や所得税などの控除額は含まれていません。</li>
+            <li>各自で控除金額を計算することで、実際の振込金額を求めることができます。</li>
+          </ul>
+        </div>
+      </div>
     </div>
     
     <div id="result"></div>
