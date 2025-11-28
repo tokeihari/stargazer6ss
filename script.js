@@ -190,53 +190,57 @@ function openTimeModal(year, month, day, dayElement) {
     <div id="timeModal" style="
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
       background: rgba(0, 0, 0, 0.7); display: flex; align-items: center; 
-      justify-content: center; z-index: 1000;">
+      justify-content: center; z-index: 1000; padding: 20px; box-sizing: border-box;">
       <div style="
-        background: white; padding: 30px; border-radius: 16px; 
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); max-width: 400px; width: 90%;">
-        <h3 style="margin: 0 0 20px 0; text-align: center; color: #6b5b73;">
+        background: white; padding: 25px; border-radius: 16px; 
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); max-width: 400px; width: 100%;
+        max-height: 90vh; overflow-y: auto;">
+        <h3 style="margin: 0 0 20px 0; text-align: center; color: #6b5b73; font-size: 18px;">
           ${year}年${month}月${day}日の勤務時間
         </h3>
         <div style="margin-bottom: 20px;">
-          <label style="display: block; margin-bottom: 10px; font-weight: 500;">開始時刻:</label>
-          <div style="display: flex; gap: 10px;">
-            <select id="modalStartHour" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #ddd;">
+          <label style="display: block; margin-bottom: 10px; font-weight: 500; font-size: 14px;">開始時刻:</label>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <select id="modalStartHour" style="flex: 1; min-width: 80px; padding: 10px; border-radius: 8px; border: 2px solid #ddd; font-size: 14px;">
               ${generateHourOptions(existingWorkDay?.startHour)}
             </select>
-            <span style="align-self: center;">:</span>
-            <select id="modalStartMinute" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #ddd;">
+            <span style="align-self: center; font-size: 16px; margin: 0 5px;">:</span>
+            <select id="modalStartMinute" style="flex: 1; min-width: 80px; padding: 10px; border-radius: 8px; border: 2px solid #ddd; font-size: 14px;">
               ${generateMinuteOptions(existingWorkDay?.startMinute)}
             </select>
           </div>
         </div>
         <div style="margin-bottom: 30px;">
-          <label style="display: block; margin-bottom: 10px; font-weight: 500;">終了時刻:</label>
-          <div style="display: flex; gap: 10px;">
-            <select id="modalEndHour" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #ddd;">
+          <label style="display: block; margin-bottom: 10px; font-weight: 500; font-size: 14px;">終了時刻:</label>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <select id="modalEndHour" style="flex: 1; min-width: 80px; padding: 10px; border-radius: 8px; border: 2px solid #ddd; font-size: 14px;">
               ${generateHourOptions(existingWorkDay?.endHour)}
             </select>
-            <span style="align-self: center;">:</span>
-            <select id="modalEndMinute" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #ddd;">
+            <span style="align-self: center; font-size: 16px; margin: 0 5px;">:</span>
+            <select id="modalEndMinute" style="flex: 1; min-width: 80px; padding: 10px; border-radius: 8px; border: 2px solid #ddd; font-size: 14px;">
               ${generateMinuteOptions(existingWorkDay?.endMinute)}
             </select>
           </div>
         </div>
-        <div style="display: flex; gap: 10px; justify-content: center;">
+        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
           <button onclick="saveWorkTime(${year}, ${month}, ${day})" style="
             background: linear-gradient(135deg, #00b894, #00a085); 
-            color: white; padding: 12px 24px; border: none; border-radius: 8px; 
-            cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;">
+            color: white; padding: 12px 20px; border: none; border-radius: 8px; 
+            cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;
+            font-size: 14px; min-width: 80px; margin: 4px;">
             保存
           </button>
           <button onclick="removeWorkDay(${year}, ${month}, ${day})" style="
             background: linear-gradient(135deg, #e74c3c, #c0392b); 
-            color: white; padding: 12px 24px; border: none; border-radius: 8px; 
-            cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;">
+            color: white; padding: 12px 20px; border: none; border-radius: 8px; 
+            cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;
+            font-size: 14px; min-width: 80px; margin: 4px;">
             削除
           </button>
           <button onclick="closeTimeModal()" style="
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d); color: white; padding: 12px 24px; border: none; 
-            border-radius: 8px; cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;">
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d); color: white; padding: 12px 20px; border: none; 
+            border-radius: 8px; cursor: pointer; font-weight: 500; font-family: 'Segoe UI', 'Yu Gothic UI', 'Meiryo UI', sans-serif;
+            font-size: 14px; min-width: 80px; margin: 4px;">
             キャンセル
           </button>
         </div>
