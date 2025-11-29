@@ -565,64 +565,6 @@
       border: none;
     }
 
-    .selected-dates {
-      margin-top: 25px;
-      padding: 20px;
-      background: rgba(255, 248, 220, 0.8);
-      backdrop-filter: blur(5px);
-      border: 2px solid rgba(255, 193, 7, 0.3);
-      border-radius: 12px;
-      display: none;
-    }
-
-    .date-input-row {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 12px;
-      padding: 15px;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 10px;
-      border: 1px solid rgba(200, 190, 180, 0.2);
-      transition: all 0.3s ease;
-    }
-
-    .date-input-row:hover {
-      background: rgba(255, 255, 255, 0.8);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .date-label {
-      min-width: 90px;
-      font-weight: 600;
-      color: #6b5b73;
-    }
-
-    .time-input-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .remove-date {
-      background: linear-gradient(135deg, #ff7675, #e17055);
-      color: white;
-      border: none;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      font-weight: 500;
-    }
-
-    .remove-date:hover {
-      background: linear-gradient(135deg, #e17055, #d63031);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 118, 117, 0.3);
-    }
-
     /* モバイル対応のレスポンシブデザイン */
     @media (max-width: 768px) {
       body {
@@ -721,17 +663,6 @@
       .time-group select {
         width: 100%;
         text-align: left;
-      }
-
-      .date-input-row {
-        flex-direction: column;
-        gap: 10px;
-        align-items: stretch;
-      }
-
-      .time-input-group {
-        flex-wrap: wrap;
-        justify-content: space-between;
       }
 
       .result p {
@@ -912,14 +843,8 @@
     <div class="calendar-container" id="calendarContainer">
       <div class="calendar-header" id="calendarHeader"></div>
       <div class="calendar" id="calendar"></div>
-      <div class="selected-dates" id="selectedDates">
-        <h4>選択された勤務日</h4>
-        <div id="dateInputs"></div>
-      </div>
     </div>
 
-    <div id="workDaysContainer"></div>
-    
     <div class="button-notice-container">
       <button onclick="calculateSalary()" style="display: none;" id="calculateBtn">給与を計算</button>
       <button class="calendar-screenshot-button" onclick="screenshotCalendar()" style="display: none;" id="calendarScreenshotBtn">📅 カレンダーをスクリーンショット</button>
@@ -936,7 +861,7 @@
             <li>すべての補助金や手当を網羅していない可能性があります。</li>
             <li>休憩時間は所定の規則に基づいて計算しています。</li>
             <li>計算結果はあくまで支給総額であり、一般に実際の振込金額とは異なります。</li>
-            <li>求職手数料や所得税などの控除額は含まれていません。</li>
+            <li>所得税などの控除額は含まれていません。</li>
             <li>各自で控除金額を計算することで、実際の振込金額を求めることができます。</li>
           </ul>
         </div>
