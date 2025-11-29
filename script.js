@@ -669,14 +669,17 @@ function calculateSalary() {
   // 総計表示
   resultHTML += '<h3>総計</h3>';
   
-  // 時間外労働の時間端数処理（30分未満切り捨て、30分以上1時間切り上げ）
+  // 時間外労働の時間端数処理（30分未満は30分に切り上げ、30分以上は1時間に切り上げ）
   const overtimeHours = totalOvertimeMinutes / 60;
   const overtimeMinuteRemainder = totalOvertimeMinutes % 60;
   let adjustedOvertimeHours;
   
-  if (overtimeMinuteRemainder < 30) {
-    // 30分未満は切り捨て
+  if (overtimeMinuteRemainder === 0) {
+    // ちょうど時間の場合はそのまま
     adjustedOvertimeHours = Math.floor(overtimeHours);
+  } else if (overtimeMinuteRemainder < 30) {
+    // 30分未満は30分に切り上げ
+    adjustedOvertimeHours = Math.floor(overtimeHours) + 0.5;
   } else {
     // 30分以上は1時間に切り上げ
     adjustedOvertimeHours = Math.ceil(overtimeHours);
