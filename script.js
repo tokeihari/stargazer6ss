@@ -55,7 +55,13 @@ function populateYearOptions() {
   const yearSelect = document.getElementById('targetYear');
   const currentYear = new Date().getFullYear();
   
-  for (let year = currentYear - 2; year <= currentYear + 2; year++) {
+  // 既存のオプション（初期の「年を選択」以外）をクリア
+  while (yearSelect.children.length > 1) {
+    yearSelect.removeChild(yearSelect.lastChild);
+  }
+  
+  // 現在年±10年の範囲でオプションを生成
+  for (let year = currentYear - 10; year <= currentYear + 10; year++) {
     const option = document.createElement('option');
     option.value = year;
     option.textContent = `${year}年`;
@@ -69,6 +75,11 @@ function populateYearOptions() {
 // 月のオプションを生成
 function populateMonthOptions() {
   const monthSelect = document.getElementById('targetMonth');
+  
+  // 既存のオプション（初期の「月を選択」以外）をクリア
+  while (monthSelect.children.length > 1) {
+    monthSelect.removeChild(monthSelect.lastChild);
+  }
   
   for (let month = 1; month <= 12; month++) {
     const option = document.createElement('option');
@@ -376,19 +387,6 @@ function updateCalculateButton() {
   }
 }
 
-// 計算ボタンの表示制御
-function updateCalculateButton() {
-  const calculateBtn = document.getElementById('calculateBtn');
-  const hasWorkDays = selectedWorkDays.some(wd => wd.isTimeSet);
-  
-  if (hasWorkDays) {
-    calculateBtn.style.display = 'block';
-    calculateBtn.textContent = `給与を計算 (${selectedWorkDays.length}日)`;
-  } else {
-    calculateBtn.style.display = 'none';
-  }
-}
-
 // 給与内訳の構造
 class PayBreakdown {
   constructor(baseWage = 0, nightAllowance = 0, earlyAllowance = 0, overtimeAllowance = 0, 
@@ -535,128 +533,14 @@ function calculateDetailedPay(hourlyWage, startMinutes, endMinutes, workingMinut
   );
 }
 
-// 求職受付手数料を計算（削除済み）
-
-// 月の日数を取得
-function getDaysInMonth(month) {
-  const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  return daysInMonth[month - 1];
+// 月の日数を取得（うるう年対応）
+function getDaysInMonth(year, month) {
+  // JavaScriptのDateオブジェクトを使って正確な日数を取得
+  // 翌月の0日目 = 当月の最終日
+  return new Date(year, month, 0).getDate();
 }
 
-// 月のプルダウンを生成
-function createMonthSelect(id) {
-  let options = '<option value="">月</option>';
-  for (let i = 1; i <= 12; i++) {
-    options += `<option value="${i}">${i}月</option>`;
-  }
-  return `<select id="${id}" onchange="updateDayOptions('${id}')">${options}</select>`;
-}
 
-// 日のプルダウンを生成
-function createDaySelect(id) {
-  return `<select id="${id}"><option value="">日</option></select>`;
-}
-
-// 時のプルダウンを生成
-function createHourSelect(id) {
-  let options = '<option value="">時</option>';
-  for (let i = 0; i <= 24; i++) {
-    options += `<option value="${i}">${String(i).padStart(2, '0')}</option>`;
-  }
-  return `<select id="${id}">${options}</select>`;
-}
-
-// 分のプルダウンを生成
-function createMinuteSelect(id) {
-  let options = '<option value="">分</option>';
-  const minutes = [0, 15, 30, 45];
-  for (let minute of minutes) {
-    options += `<option value="${minute}">${String(minute).padStart(2, '0')}</option>`;
-  }
-  return `<select id="${id}">${options}</select>`;
-}
-
-// 日の選択肢を更新
-function updateDayOptions(monthSelectId) {
-  const monthSelect = document.getElementById(monthSelectId);
-  const daySelectId = monthSelectId.replace('month', 'day');
-  const daySelect = document.getElementById(daySelectId);
-  
-  const selectedMonth = parseInt(monthSelect.value);
-  
-  if (!selectedMonth) {
-    daySelect.innerHTML = '<option value="">日</option>';
-    return;
-  }
-  
-  const daysInMonth = getDaysInMonth(selectedMonth);
-  let options = '<option value="">日</option>';
-  
-  for (let i = 1; i <= daysInMonth; i++) {
-    options += `<option value="${i}">${i}日</option>`;
-  }
-  
-  daySelect.innerHTML = options;
-}
-
-// 勤務日入力フォームを生成
-function generateWorkDayInputs() {
-  const totalWorkDays = parseInt(document.getElementById('totalWorkDays').value);
-  
-  if (!totalWorkDays || totalWorkDays <= 0) {
-    alert('総勤務回数を正しく入力してください');
-    return;
-  }
-  
-  const container = document.getElementById('workDaysContainer');
-  container.innerHTML = '';
-  
-  for (let i = 0; i < totalWorkDays; i++) {
-    const workDayDiv = document.createElement('div');
-    workDayDiv.className = 'work-day';
-    workDayDiv.innerHTML = `
-      <h4>勤務日 ${i + 1}</h4>
-      <div style="margin-bottom: 15px;">
-        <label>日付:</label>
-        <div style="display: flex; gap: 10px; align-items: center;">
-          ${createMonthSelect(`month_${i}`)}
-          ${createDaySelect(`day_${i}`)}
-        </div>
-      </div>
-      <div style="display: flex; gap: 30px;">
-        <div style="flex: 1;">
-          <label>開始時刻:</label>
-          <div class="time-inputs">
-            <div class="time-group">
-              <label>時</label>
-              ${createHourSelect(`start_hour_${i}`)}
-            </div>
-            <div class="time-group">
-              <label>分</label>
-              ${createMinuteSelect(`start_minute_${i}`)}
-            </div>
-          </div>
-        </div>
-        <div style="flex: 1;">
-          <label>終了時刻:</label>
-          <div class="time-inputs">
-            <div class="time-group">
-              <label>時</label>
-              ${createHourSelect(`end_hour_${i}`)}
-            </div>
-            <div class="time-group">
-              <label>分</label>
-              ${createMinuteSelect(`end_minute_${i}`)}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-    container.appendChild(workDayDiv);
-  }
-  
-  document.getElementById('calculateBtn').style.display = 'block';
-}
 
 // サンプルデータを入力
 function fillSampleData() {
